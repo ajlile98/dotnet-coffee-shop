@@ -2,7 +2,7 @@ namespace API.Entities;
 
 using System.ComponentModel.DataAnnotations;
 
-public class AppCustomer
+public class AppUser
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -10,4 +10,8 @@ public class AppCustomer
     public required string DisplayName { get; set; }
 
     public required string Email { get; set; }
+
+    public required byte[] PasswordHash { get; set; }
+
+    public required byte[] PasswordSalt { get; set; }
 }
