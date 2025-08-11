@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "jmrog.vscode-nuget-package-manager",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "eslint.vscode-eslint",
+    "Angular.ng-template"
+  ]
+}
