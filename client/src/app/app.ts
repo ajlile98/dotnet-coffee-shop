@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { Nav } from "../layout/nav/nav";
 import { AccountService } from '../core/services/account-service';
 import { Home } from '../features/home/home';
+import { User } from '../types/user';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class App implements OnInit {
   private accountService = inject(AccountService);
   private http = inject(HttpClient);
   protected readonly title = 'Coffee Shop';
-  protected customers = signal<any>([]);
+  protected customers = signal<User[]>([]);
 
   setCurrentUser(){
     const userString = localStorage.getItem('user');
@@ -31,7 +32,7 @@ export class App implements OnInit {
 
   getCustomers() {
     try {
-      return lastValueFrom(this.http.get('https://localhost:5001/api/users'));
+      return lastValueFrom(this.http.get<User[]>('https://localhost:5001/api/users'));
     } catch (error){
       console.log(error);
       throw error;
