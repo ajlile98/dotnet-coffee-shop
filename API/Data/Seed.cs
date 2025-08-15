@@ -28,7 +28,7 @@ public class Seed
         {
             using var hmac = new HMACSHA512();
             
-            var user = new AppUser
+            var user = new User
             {
                 Id = customer.Id,
                 Email = customer.Email,
@@ -36,25 +36,25 @@ public class Seed
                 ImageUrl = customer.ImageUrl,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd")),
                 PasswordSalt = hmac.Key,
-                Customer = new Customer
-                {
-                    Id = customer.Id,
-                    DisplayName = customer.DisplayName,
-                    Description = customer.Description,
-                    DateOfBirth = customer.DateOfBirth,
-                    ImageUrl = customer.ImageUrl,
-                    Gender = customer.Gender,
-                    City = customer.City,
-                    Country = customer.Country,
-                    LastActive = customer.LastActive,
-                    Created = customer.Created
-                }
+                // Customer = new Customer
+                // {
+                //     Id = customer.Id,
+                //     DisplayName = customer.DisplayName,
+                //     Description = customer.Description,
+                //     DateOfBirth = customer.DateOfBirth,
+                //     ImageUrl = customer.ImageUrl,
+                //     Gender = customer.Gender,
+                //     City = customer.City,
+                //     Country = customer.Country,
+                //     LastActive = customer.LastActive,
+                //     Created = customer.Created
+                // }
             };
-            user.Customer.Photos.Add(new Photo
-            {
-                Url = customer.ImageUrl!,
-                CustomerId = customer.Id,
-            });
+            // user.Customer.Photos.Add(new Photo
+            // {
+            //     Url = customer.ImageUrl!,
+            //     CustomerId = customer.Id,
+            // });
 
             context.Users.Add(user);
         }

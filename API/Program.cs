@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
