@@ -2,7 +2,7 @@ namespace API.Entities;
 
 using System.ComponentModel.DataAnnotations;
 
-public class User
+public class AppUser
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();

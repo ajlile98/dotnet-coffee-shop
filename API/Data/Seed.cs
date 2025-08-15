@@ -28,7 +28,7 @@ public class Seed
         {
             using var hmac = new HMACSHA512();
             
-            var user = new User
+            var user = new AppUser
             {
                 Id = customer.Id,
                 Email = customer.Email,
@@ -57,6 +57,34 @@ public class Seed
             // });
 
             context.Users.Add(user);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    public static async Task SeedMenuItems(AppDbContext context)
+    {
+        if (await context.MenuItems.AnyAsync()) return;
+
+        var menuItemData = await File.ReadAllTextAsync("Data/MenuItemSeed.json");
+        var menuItems = JsonSerializer.Deserialize<List<SeedMenuItemDto>>(menuItemData);
+
+        if (menuItems == null)
+        {
+            Console.WriteLine("No menu items in seed data");
+            return;
+        }
+
+        foreach (var menuItemDto in menuItems)
+        {
+            var menuItem = new MenuItem
+            {
+                Id = menuItemDto.Id,
+                Name = menuItemDto.Name,
+                Price = menuItemDto.Price
+            };
+
+            context.MenuItems.Add(menuItem);
         }
 
         await context.SaveChangesAsync();

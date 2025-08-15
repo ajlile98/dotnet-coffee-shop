@@ -5,9 +5,9 @@ namespace API.Interfaces;
 
 public interface IUserRepository
 {
-    void Update(User user);
+    void Update(AppUser user);
     Task<bool> SaveAllAsync();
-    Task<IReadOnlyList<User>> GetUsersAsync();
-    Task<User?> GetUserByIdAsync(string id);
+    Task<IReadOnlyList<AppUser>> GetUsersAsync();
+    Task<AppUser?> GetUserByIdAsync(string id);
     // Task<IReadOnlyList<Photo>> GetPhotosForUserAsync(string userId);
 }

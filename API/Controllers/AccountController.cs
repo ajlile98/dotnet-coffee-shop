@@ -19,7 +19,7 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
 
         using var hmac = new HMACSHA512();
 
-        var user = new User
+        var user = new AppUser
         {
             DisplayName = registerDto.DisplayName,
             Email = registerDto.Email,
@@ -43,10 +43,6 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
         using var hmac = new HMACSHA512(user.PasswordSalt);
 
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-
-        Console.WriteLine("HashedPasswords:");
-        Console.WriteLine(computedHash.ToString());
-        Console.WriteLine(user.PasswordHash.ToString());
 
         for (var i = 0; i < computedHash.Length; i++)
         {

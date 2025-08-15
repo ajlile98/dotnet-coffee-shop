@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using API.Middleware;
 using API.Entities;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,32 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -46,19 +72,24 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Coffee Shop API V1");
+        c.DefaultModelsExpandDepth(-1); // Disable swagger schemas at bottom
+        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+        c.DisplayRequestDuration();
+    });
 }
 
-// app.UseHttpsRedirection();
-
-// app.UseAuthorization();
-
 // Configure the HTTP request pipeline
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://localhost:5001"));
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -72,6 +103,7 @@ try
     var context = services.GetRequiredService<AppDbContext>();
     await context.Database.MigrateAsync();
     await Seed.SeedUsers(context);
+    await Seed.SeedMenuItems(context);
 }
 catch (Exception ex)
 {

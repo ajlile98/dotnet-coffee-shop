@@ -8,12 +8,12 @@ namespace API.Data;
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public async Task<User?> GetUserByIdAsync(string id)
+    public async Task<AppUser?> GetUserByIdAsync(string id)
     {
         return await context.Users.FindAsync(id);
     }
 
-    public async Task<IReadOnlyList<User>> GetUsersAsync()
+    public async Task<IReadOnlyList<AppUser>> GetUsersAsync()
     {
         return await context.Users.ToListAsync();
     }
@@ -31,7 +31,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return await context.SaveChangesAsync() > 0;
     }
 
-    public void Update(User AppUser)
+    public void Update(AppUser AppUser)
     {
         context.Entry(AppUser).State = EntityState.Modified;
     }
