@@ -44,10 +44,6 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
 
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-        Console.WriteLine("HashedPasswords:");
-        Console.WriteLine(computedHash.ToString());
-        Console.WriteLine(user.PasswordHash.ToString());
-
         for (var i = 0; i < computedHash.Length; i++)
         {
             if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");

@@ -17,5 +17,5 @@ public class AppUser
 
     public required byte[] PasswordSalt { get; set; }
 
-    public Customer Customer { get; set; } = null!;
+    // public Customer Customer { get; set; } = null!;
 }

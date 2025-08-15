@@ -6,18 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Authorize]
-    public class UsersController(ICustomerRepository customerRepository) : BaseApiController
+    public class UsersController(IUserRepository userRepository) : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Customer>>> GetUsers()
+        public async Task<ActionResult<IReadOnlyList<AppUser>>> GetUsers()
         {
-            return Ok(await customerRepository.GetCustomersAsync());
+            return Ok(await userRepository.GetUsersAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetUser(string id)
+        public async Task<ActionResult<AppUser>> GetUser(string id)
         {
-            var user = await customerRepository.GetCustomerByIdAsync(id);
+            var user = await userRepository.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -25,10 +25,10 @@ namespace API.Controllers
             return user;
         }
 
-        [HttpGet("{id}/photos")]
-        public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
-        {
-            return Ok(await customerRepository.GetPhotosForCustomerAsync(id));
-        }
+        // [HttpGet("{id}/photos")]
+        // public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
+        // {
+        //     return Ok(await userRepository.GetPhotosForUserAsync(id));
+        // }
     }
 }

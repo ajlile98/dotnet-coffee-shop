@@ -1,0 +1,102 @@
+[
+    {
+        "Id": "espresso-id",
+        "Name": "Espresso",
+        "Price": 2.50
+    },
+    {
+        "Id": "americano-id",
+        "Name": "Americano",
+        "Price": 3.00
+    },
+    {
+        "Id": "cappuccino-id",
+        "Name": "Cappuccino",
+        "Price": 4.50
+    },
+    {
+        "Id": "latte-id",
+        "Name": "Latte",
+        "Price": 4.75
+    },
+    {
+        "Id": "macchiato-id",
+        "Name": "Macchiato",
+        "Price": 4.25
+    },
+    {
+        "Id": "mocha-id",
+        "Name": "Mocha",
+        "Price": 5.25
+    },
+    {
+        "Id": "frappuccino-id",
+        "Name": "Frappuccino",
+        "Price": 5.75
+    },
+    {
+        "Id": "cold-brew-id",
+        "Name": "Cold Brew",
+        "Price": 3.75
+    },
+    {
+        "Id": "iced-coffee-id",
+        "Name": "Iced Coffee",
+        "Price": 3.25
+    },
+    {
+        "Id": "chai-latte-id",
+        "Name": "Chai Latte",
+        "Price": 4.50
+    },
+    {
+        "Id": "green-tea-id",
+        "Name": "Green Tea",
+        "Price": 2.75
+    },
+    {
+        "Id": "black-tea-id",
+        "Name": "Black Tea",
+        "Price": 2.50
+    },
+    {
+        "Id": "hot-chocolate-id",
+        "Name": "Hot Chocolate",
+        "Price": 3.50
+    },
+    {
+        "Id": "croissant-id",
+        "Name": "Croissant",
+        "Price": 3.25
+    },
+    {
+        "Id": "blueberry-muffin-id",
+        "Name": "Blueberry Muffin",
+        "Price": 3.75
+    },
+    {
+        "Id": "bagel-cream-cheese-id",
+        "Name": "Bagel with Cream Cheese",
+        "Price": 4.25
+    },
+    {
+        "Id": "avocado-toast-id",
+        "Name": "Avocado Toast",
+        "Price": 6.50
+    },
+    {
+        "Id": "breakfast-sandwich-id",
+        "Name": "Breakfast Sandwich",
+        "Price": 7.25
+    },
+    {
+        "Id": "danish-pastry-id",
+        "Name": "Danish Pastry",
+        "Price": 3.50
+    },
+    {
+        "Id": "chocolate-chip-cookie-id",
+        "Name": "Chocolate Chip Cookie",
+        "Price": 2.25
+    }
+]

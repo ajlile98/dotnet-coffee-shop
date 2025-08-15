@@ -9,8 +9,8 @@ public class Photo
     public required string Url { get; set; }
     public string? PublicId { get; set; }
 
-    // Navigation Property
-    [JsonIgnore]
-    public Customer Customer { get; set; } = null!;
-    public string CustomerId { get; set; } = null!;
+    // // Navigation Property
+    // [JsonIgnore]
+    // public Customer Customer { get; set; } = null!;
+    // public string CustomerId { get; set; } = null!;
 }
