@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 })
 export class InitService {
   private accountService = inject(AccountService);
-  
+
   init(){
     const userString = localStorage.getItem('user');
     if (!userString) return of(null);

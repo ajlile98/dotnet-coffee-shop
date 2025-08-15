@@ -1,1 +1,5 @@
-<p>menu works!</p>
+<ul>
+@for (item of menuItems(); track $index){
+    <li>{{item.name}} - ${{item.price}}</li>
+}
+</ul>
