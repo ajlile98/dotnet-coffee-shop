@@ -1,6 +1,7 @@
 namespace API.Entities;
 
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 public class AppUser
 {
@@ -13,9 +14,11 @@ public class AppUser
 
     public string? ImageUrl { get; set; }
 
-    public required byte[] PasswordHash { get; set; }
+    [JsonIgnore]
+    public byte[] PasswordHash { get; set; } = [];
+    [JsonIgnore]
 
-    public required byte[] PasswordSalt { get; set; }
+    public byte[] PasswordSalt { get; set; } = [];
 
     // public Customer Customer { get; set; } = null!;
 }
