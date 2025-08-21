@@ -8,17 +8,14 @@ import { tap } from 'rxjs';
 })
 export class MenuItemService {
   private http = inject(HttpClient); 
-  protected menuItems = signal<MenuItem[]>([])
 
   baseUrl = "https://localhost:5001/api/"
 
   getMenuItems(){
-    return this.http.get<MenuItem[]>(this.baseUrl + 'MenuItems').pipe(
-      tap(menuItems => this.setMenuItems(menuItems))
-    );
+    return this.http.get<MenuItem[]>(this.baseUrl + 'MenuItems');
   }
 
-  setMenuItems(menuItems: MenuItem[]){
-    this.menuItems.set(menuItems);
+  getMenuItem(id: string){
+    return this.http.get<MenuItem>(this.baseUrl + 'MenuItems/' + id);
   }
 }
