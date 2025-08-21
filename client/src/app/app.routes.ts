@@ -4,11 +4,12 @@ import { CustomerList } from '../features/customers/customer-list/customer-list'
 import { CustomerDetailed } from '../features/customers/customer-detailed/customer-detailed';
 import { Lists } from '../features/lists/lists';
 import { Messages } from '../features/messages/messages';
-import { Menu } from '../features/menu/menu';
+import { Menu } from '../features/menu/menu-list/menu';
 import { authGuard } from '../core/guards/auth-guard';
 import { TestErrors } from '../features/test-errors/test-errors';
 import { NotFound } from '../shared/errors/not-found/not-found';
 import { ServerError } from '../shared/errors/server-error/server-error';
+import { MenuDetailed } from '../features/menu/menu-detailed/menu-detailed';
 
 export const routes: Routes = [
     {path: '', component: Home},
@@ -22,6 +23,7 @@ export const routes: Routes = [
             {path: 'lists', component: Lists},
             {path: 'messages', component: Messages},
             {path: 'menu', component: Menu},
+            {path: 'menu/:id', component: MenuDetailed},
         ]
     },
     {path: 'errors', component: TestErrors},
