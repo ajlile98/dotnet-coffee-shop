@@ -1,6 +1,9 @@
 <div class="flex flex-col gap-6">
+<button class="btn btn-primary" (click)="sortMenuItems()">
+    Sort By Price
+</button>
 @for (item of menuItems(); track $index){
-    <a href="/menu/{{item.id}}">
+    <a routerLink="/menu/{{item.id}}" routerLinkActive="text-accent">
         <div class="card bg-base-100 w-1/2 mx-auto flex flex-col p-6 rounded-lg shadow-lg">
             <div class="card-title justify-center text-3xl text-primary">
                 {{item.name}} - ${{item.price}}

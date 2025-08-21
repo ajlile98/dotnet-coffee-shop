@@ -1,10 +1,11 @@
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuItemService } from '../../../core/services/menu-item-service';
 import { MenuItem } from '../../../types/menuItem';
 import { Component, inject, signal, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-menu',
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './menu.html',
   styleUrl: './menu.css'
 })
@@ -24,6 +25,7 @@ export class Menu implements OnInit {
         // this.cancel();
       },
       error: error => console.log(error)
-  });
+    });
   }
+
 }
