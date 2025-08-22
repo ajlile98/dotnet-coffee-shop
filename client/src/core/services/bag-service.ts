@@ -33,4 +33,8 @@ export class BagService {
   getBag(){
     return this.bag;
   }
+  
+  clearBag(){
+    this.bag.set([]);
+  }
 }
