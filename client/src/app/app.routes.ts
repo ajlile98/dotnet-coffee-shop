@@ -10,6 +10,7 @@ import { TestErrors } from '../features/test-errors/test-errors';
 import { NotFound } from '../shared/errors/not-found/not-found';
 import { ServerError } from '../shared/errors/server-error/server-error';
 import { MenuDetailed } from '../features/menu/menu-detailed/menu-detailed';
+import { Orders } from '../features/orders/orders';
 
 export const routes: Routes = [
     {path: '', component: Home},
@@ -24,6 +25,7 @@ export const routes: Routes = [
             {path: 'messages', component: Messages},
             {path: 'menu', component: Menu},
             {path: 'menu/:id', component: MenuDetailed},
+            {path: 'orders', component: Orders},
         ]
     },
     {path: 'errors', component: TestErrors},

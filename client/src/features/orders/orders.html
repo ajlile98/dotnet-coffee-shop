@@ -1,0 +1,11 @@
+<ul>
+    @if(this.bagService.getBag()().length > 0){
+        @for(item of this.bagService.getBag()(); track item.id) {
+        <li>
+            {{item.name}} - ${{item.price}}
+        </li>
+        }
+    } @else {
+        No Items in Bag yet! Please go to Menu and start adding items.
+    }
+</ul>
