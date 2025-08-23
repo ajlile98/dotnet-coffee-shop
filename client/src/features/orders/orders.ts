@@ -21,6 +21,10 @@ export class Orders implements OnInit {
   protected orders = signal<any[]>([]);
 
   ngOnInit(){
+    this.loadOrders();
+  }
+
+  private loadOrders() {
     this.orderService.getOrders().subscribe({
       next: orders => {
         console.log("Orders:");
@@ -37,9 +41,23 @@ export class Orders implements OnInit {
 
   submitOrder(){
     const bag = this.bagService.getBag()();
-    this.orderService.createOrder(bag);
-    this.bagService.clearBag();
-    this.toastService.info("Order Submitted!")
+    const orderObservable = this.orderService.createOrder(bag);
+
+    if(orderObservable){
+      orderObservable.subscribe({
+        next: (result) => {
+          console.log('Order created successfully:', result);
+          this.bagService.clearBag();
+          this.toastService.info("Order Submitted!");
+          // Refresh the orders list to show the new order immediately
+          this.loadOrders();
+        },
+        error: (error) => {
+          console.error('Failed to create order:', error);
+          this.toastService.error('Failed to create order');
+        }
+      });
+    }
   }
 
   getStatusColor(status: string): string {
@@ -67,5 +85,47 @@ export class Orders implements OnInit {
 
   goToMenu() {
     this.router.navigate(['/menu']);
+  }
+
+  getBagTotal(): number {
+    return this.bagService.getBag()().reduce((sum, item) => sum + item.price, 0);
+  }
+
+  // Get bag items grouped by ID with quantities
+  getBagItemsWithQuantities() {
+    const bagItems = this.bagService.getBag()();
+    const groupedItems = new Map<string, {item: any, quantity: number}>();
+    
+    bagItems.forEach(item => {
+      if (groupedItems.has(item.id)) {
+        groupedItems.get(item.id)!.quantity++;
+      } else {
+        groupedItems.set(item.id, {item, quantity: 1});
+      }
+    });
+    
+    return Array.from(groupedItems.values());
+  }
+
+  // Group order items by menu item ID and sum quantities
+  getGroupedOrderItems(orderItems: any[]) {
+    const groupedItems = new Map<string, {item: any, totalQuantity: number, totalPrice: number}>();
+    
+    orderItems.forEach(orderItem => {
+      const menuItemId = orderItem.menuItem.id;
+      if (groupedItems.has(menuItemId)) {
+        const existing = groupedItems.get(menuItemId)!;
+        existing.totalQuantity += orderItem.quantity;
+        existing.totalPrice += orderItem.priceAtTime * orderItem.quantity;
+      } else {
+        groupedItems.set(menuItemId, {
+          item: orderItem,
+          totalQuantity: orderItem.quantity,
+          totalPrice: orderItem.priceAtTime * orderItem.quantity
+        });
+      }
+    });
+    
+    return Array.from(groupedItems.values());
   }
 }

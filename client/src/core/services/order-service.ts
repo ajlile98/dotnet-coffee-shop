@@ -19,7 +19,16 @@ export class OrderService {
       console.log("User is not logged in!");
       return;
     }
-    return this.http.post(this.baseUrl + 'Order', {userId: user.id});
+    return this.http.post(this.baseUrl + 'Order', {
+      userId: user.id,
+      orderItems: bag.map(item => ({
+        menuItemId: item.id,
+        quantity: 1, // You might want to track quantity in your bag
+        priceAtTime: item.price
+      }))
+    }).pipe(
+      tap(result => console.log('Order created:', result))
+    );
   }
 
   getOrders(){

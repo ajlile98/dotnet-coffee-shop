@@ -1,4 +1,147 @@
-<p>{{menuItem()?.name}} - {{menuItem()?.price}}</p>
-<button class="btn btn-primary" (click)="addMenuItemToBag()">
-    Add to Bag
-</button>
+@if (menuItem()) {
+  <div class="container mx-auto p-6 max-w-4xl">
+    <!-- Back Button -->
+    <div class="mb-6">
+      <button class="btn btn-ghost btn-sm" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Menu
+      </button>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- Image Section -->
+      <div class="flex justify-center items-center">
+        <div class="card bg-base-100 shadow-xl w-full">
+          <div class="card-body flex justify-center items-center h-64">
+            @if (menuItem()?.photo?.url) {
+              <img [src]="menuItem()!.photo!.url" [alt]="menuItem()!.name" class="h-full w-full object-cover rounded-lg">
+            } @else {
+              <!-- Coffee Cup SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-primary" fill="currentColor" viewBox="0 0 275.353 275.353">
+                <path d="M229.784,199.712c27.269,0,45.568-29.692,45.568-57.419c0-20.117-12.418-22.843-24.562-22.843c-3.468,0-7.21,0.234-11.167,0.479c-3.195,0.176-6.507,0.332-9.848,0.41l0.039-0.889H1.514c0,42.959,24.132,80.321,59.686,99.49C24.787,221.333,0,226.043,0,231.445c0,7.865,51.782,14.196,115.659,14.196s115.649-6.331,115.649-14.196c0-5.432-24.904-10.132-61.454-12.516c10.63-5.725,20.263-13.004,28.529-21.641C208.026,199.712,219.448,199.712,229.784,199.712z M229.364,128.272c3.683-0.088,7.289-0.244,10.737-0.469c3.83-0.205,7.464-0.42,10.698-0.42c11.509,0,16.658,2.159,16.658,14.909c0,23.419-15.466,49.515-37.664,49.515c-9.751,0-18.3-0.205-25.285-1.358C218.559,173.196,227.537,151.731,229.364,128.272z M98.982,97.203c-0.557-0.547-13.414-13.922,0.156-30.327c16.58-20,0.01-37-0.156-37.166l-3.595,3.595c0.557,0.537,13.414,13.932-0.166,30.327c-16.58,20.029-0.01,37.039,0.166,37.195L98.982,97.203z M118.737,97.203c-0.557-0.547-13.414-13.922,0.166-30.327c16.56-20,0-37-0.166-37.166l-3.605,3.595c0.557,0.537,13.414,13.932-0.156,30.327c-16.56,20.039-0.01,37.039,0.166,37.205L118.737,97.203z M140.251,97.203c-0.557-0.547-13.414-13.922,0.156-30.327c16.57-20,0-37-0.156-37.166l-3.615,3.595c0.547,0.537,13.424,13.932-0.166,30.327c-16.56,20.039,0,37.039,0.176,37.205L140.251,97.203z"/>
+              </svg>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Section -->
+      <div class="space-y-6">
+        <!-- Title and Price -->
+        <div>
+          <h1 class="text-4xl font-bold text-primary mb-2">{{menuItem()!.name}}</h1>
+          <div class="text-3xl font-bold text-accent">${{menuItem()!.price}}</div>
+        </div>
+
+        <!-- Description (if you add it later) -->
+        <div class="prose">
+          <p class="text-base-content/80">
+            Enjoy our delicious {{menuItem()!.name}} made with the finest ingredients. 
+            Perfect for any time of the day, crafted with care by our expert baristas.
+          </p>
+        </div>
+
+        <!-- Product Details -->
+        <div class="bg-base-200 rounded-lg p-4">
+          <h3 class="font-semibold mb-3">Product Details</h3>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-base-content/70">Category:</span>
+              <span class="ml-2 font-medium">{{getCategory(menuItem()!.name)}}</span>
+            </div>
+            <div>
+              <span class="text-base-content/70">Price:</span>
+              <span class="ml-2 font-medium">${{menuItem()!.price}}</span>
+            </div>
+            <div>
+              <span class="text-base-content/70">Size:</span>
+              <span class="ml-2 font-medium">{{selectedSize}}</span>
+            </div>
+            <div>
+              <span class="text-base-content/70">Temperature:</span>
+              <span class="ml-2 font-medium">{{selectedTemp}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customization Options -->
+        <div class="space-y-4">
+          <h3 class="font-semibold">Customize Your Order</h3>
+          
+          <!-- Size Selection -->
+          <div>
+            <label class="block text-sm font-medium mb-2">Size</label>
+            <div class="flex gap-2">
+              @for (size of sizes; track size.name) {
+                <button 
+                  class="btn btn-sm"
+                  [class.btn-primary]="selectedSize === size.name"
+                  [class.btn-outline]="selectedSize !== size.name"
+                  (click)="selectSize(size)">
+                  {{size.name}} (+${{size.price}})
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Temperature Selection (for drinks) -->
+          @if (isDrink(menuItem()!.name)) {
+            <div>
+              <label class="block text-sm font-medium mb-2">Temperature</label>
+              <div class="flex gap-2">
+                @for (temp of temperatures; track temp) {
+                  <button 
+                    class="btn btn-sm"
+                    [class.btn-primary]="selectedTemp === temp"
+                    [class.btn-outline]="selectedTemp !== temp"
+                    (click)="selectedTemp = temp">
+                    {{temp}}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Quantity Selection -->
+          <div>
+            <label class="block text-sm font-medium mb-2">Quantity</label>
+            <div class="flex items-center gap-4">
+              <button class="btn btn-sm btn-outline" (click)="decreaseQuantity()">-</button>
+              <span class="text-xl font-semibold w-8 text-center">{{quantity()}}</span>
+              <button class="btn btn-sm btn-outline" (click)="increaseQuantity()">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Price -->
+        <div class="bg-primary/10 rounded-lg p-4">
+          <div class="flex justify-between items-center">
+            <span class="text-lg font-semibold">Total Price:</span>
+            <span class="text-2xl font-bold text-primary">${{getTotalPrice()}}</span>
+          </div>
+        </div>
+
+        <!-- Add to Bag Button -->
+        <button 
+          class="btn btn-primary btn-lg w-full"
+          (click)="addMenuItemToBag()"
+          [disabled]="!menuItem()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6" />
+          </svg>
+          Add {{quantity()}} to Bag - ${{getTotalPrice()}}
+        </button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- Loading State -->
+  <div class="flex justify-center items-center min-h-96">
+    <div class="text-center">
+      <div class="loading loading-spinner loading-lg text-primary mb-4"></div>
+      <p class="text-lg">Loading menu item...</p>
+    </div>
+  </div>
+}

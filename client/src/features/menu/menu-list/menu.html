@@ -1,18 +1,130 @@
-<div class="flex flex-col gap-6">
-@for (item of menuItems(); track $index){
-    <a routerLink="/menu/{{item.id}}" routerLinkActive="text-accent">
-        <div class="card bg-base-100 w-1/2 mx-auto flex flex-col p-6 rounded-lg shadow-lg">
-            <div class="card-title justify-center text-3xl text-primary">
-                {{item.name}} - ${{item.price}}
-            </div>
-            <div class="card-body w-full flex justify-center items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="35px"
-                    width="35px" version="1.1" id="Capa_1" viewBox="0 0 275.353 275.353" xml:space="preserve">
-                    <path style="fill:#010002;"
-                        d="M229.784,199.712c27.269,0,45.568-29.692,45.568-57.419c0-20.117-12.418-22.843-24.562-22.843      c-3.468,0-7.21,0.234-11.167,0.479c-3.195,0.176-6.507,0.332-9.848,0.41l0.039-0.889H1.514c0,42.959,24.132,80.321,59.686,99.49      C24.787,221.333,0,226.043,0,231.445c0,7.865,51.782,14.196,115.659,14.196s115.649-6.331,115.649-14.196      c0-5.432-24.904-10.132-61.454-12.516c10.63-5.725,20.263-13.004,28.529-21.641      C208.026,199.712,219.448,199.712,229.784,199.712z M229.364,128.272c3.683-0.088,7.289-0.244,10.737-0.469      c3.83-0.205,7.464-0.42,10.698-0.42c11.509,0,16.658,2.159,16.658,14.909c0,23.419-15.466,49.515-37.664,49.515      c-9.751,0-18.3-0.205-25.285-1.358C218.559,173.196,227.537,151.731,229.364,128.272z M98.982,97.203      c-0.557-0.547-13.414-13.922,0.156-30.327c16.58-20,0.01-37-0.156-37.166l-3.595,3.595c0.557,0.537,13.414,13.932-0.166,30.327      c-16.58,20.029-0.01,37.039,0.166,37.195L98.982,97.203z M118.737,97.203c-0.557-0.547-13.414-13.922,0.166-30.327      c16.56-20,0-37-0.166-37.166l-3.605,3.595c0.557,0.537,13.414,13.932-0.156,30.327c-16.56,20.039-0.01,37.039,0.166,37.205      L118.737,97.203z M140.251,97.203c-0.557-0.547-13.414-13.922,0.156-30.327c16.57-20,0-37-0.156-37.166l-3.615,3.595      c0.547,0.537,13.424,13.932-0.166,30.327c-16.56,20.039,0,37.039,0.176,37.205L140.251,97.203z" />
+<div class="container mx-auto p-6">
+  <h1 class="text-4xl font-bold text-center mb-8 text-primary">Our Menu</h1>
+  
+  <!-- Category Filter -->
+  <div class="flex justify-center mb-8">
+    <div class="tabs tabs-boxed">
+      @for (category of categories; track category) {
+        <button 
+          class="tab"
+          [class.tab-active]="selectedCategory() === category"
+          (click)="filterByCategory(category)">
+          {{category}}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Menu Items Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (item of filteredMenuItems(); track item.id) {
+      <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+        <!-- Image Section -->
+        <div class="relative overflow-hidden rounded-t-lg h-48 bg-base-200 flex items-center justify-center">
+          @if (item.photo?.url) {
+            <img [src]="item.photo?.url" [alt]="item.name" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary opacity-50" fill="currentColor" viewBox="0 0 275.353 275.353">
+              <path d="M229.784,199.712c27.269,0,45.568-29.692,45.568-57.419c0-20.117-12.418-22.843-24.562-22.843c-3.468,0-7.21,0.234-11.167,0.479c-3.195,0.176-6.507,0.332-9.848,0.41l0.039-0.889H1.514c0,42.959,24.132,80.321,59.686,99.49C24.787,221.333,0,226.043,0,231.445c0,7.865,51.782,14.196,115.659,14.196s115.649-6.331,115.649-14.196c0-5.432-24.904-10.132-61.454-12.516c10.63-5.725,20.263-13.004,28.529-21.641C208.026,199.712,219.448,199.712,229.784,199.712z M229.364,128.272c3.683-0.088,7.289-0.244,10.737-0.469c3.83-0.205,7.464-0.42,10.698-0.42c11.509,0,16.658,2.159,16.658,14.909c0,23.419-15.466,49.515-37.664,49.515c-9.751,0-18.3-0.205-25.285-1.358C218.559,173.196,227.537,151.731,229.364,128.272z M98.982,97.203c-0.557-0.547-13.414-13.922,0.156-30.327c16.58-20,0.01-37-0.156-37.166l-3.595,3.595c0.557,0.537,13.414,13.932-0.166,30.327c-16.58,20.029-0.01,37.039,0.166,37.195L98.982,97.203z M118.737,97.203c-0.557-0.547-13.414-13.922,0.166-30.327c16.56-20,0-37-0.166-37.166l-3.605,3.595c0.557,0.537,13.414,13.932-0.156,30.327c-16.56,20.039-0.01,37.039,0.166,37.205L118.737,97.203z M140.251,97.203c-0.557-0.547-13.414-13.922,0.156-30.327c16.57-20,0-37-0.156-37.166l-3.615,3.595c0.547,0.537,13.424,13.932-0.166,30.327c-16.56,20.039,0,37.039,0.176,37.205L140.251,97.203z"/>
+            </svg>
+          }
+          
+          <!-- Category Badge -->
+          <div class="absolute top-2 left-2">
+            <div class="badge badge-primary badge-sm">{{getCategory(item.name)}}</div>
+          </div>
+
+          <!-- Quick Add Button Overlay -->
+          <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button 
+              class="btn btn-primary btn-circle btn-lg"
+              (click)="quickAddToBag(item, $event)"
+              [disabled]="isAdding() === item.id">
+              @if (isAdding() === item.id) {
+                <div class="loading loading-spinner loading-sm"></div>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-            </div>
+              }
+            </button>
+          </div>
         </div>
-    </a>
-}
+
+        <!-- Card Content -->
+        <div class="card-body p-4">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="card-title text-lg font-bold line-clamp-2">{{item.name}}</h3>
+            <div class="text-xl font-bold text-primary">${{item.price}}</div>
+          </div>
+
+          <!-- Quick Description -->
+          <p class="text-sm text-base-content/70 mb-4 line-clamp-2">
+            {{getDescription(item.name)}}
+          </p>
+
+          <!-- Card Actions -->
+          <div class="card-actions justify-between items-center">
+            <button 
+              class="btn btn-ghost btn-sm"
+              (click)="viewDetails(item.id)">
+              View Details
+            </button>
+            
+            <div class="flex items-center gap-2">
+              <!-- Quick Quantity Selector -->
+              <div class="flex items-center gap-1">
+                <button 
+                  class="btn btn-xs btn-outline"
+                  (click)="decreaseQuantity(item.id)">
+                  -
+                </button>
+                <span class="w-6 text-center text-sm font-semibold">{{getQuantity(item.id)}}</span>
+                <button 
+                  class="btn btn-xs btn-outline"
+                  (click)="increaseQuantity(item.id)">
+                  +
+                </button>
+              </div>
+
+              <button 
+                class="btn btn-primary btn-sm"
+                (click)="addToBag(item)"
+                [disabled]="isAdding() === item.id">
+                @if (isAdding() === item.id) {
+                  <div class="loading loading-spinner loading-xs mr-1"></div>
+                }
+                Add to Bag
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Empty State -->
+  @if (filteredMenuItems().length === 0) {
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">🔍</div>
+      <h2 class="text-2xl font-bold mb-2">No items found</h2>
+      <p class="text-base-content/70">Try selecting a different category.</p>
+    </div>
+  }
 </div>
+
+<!-- Floating Bag Button -->
+@if (bagService.getBag()().length > 0) {
+  <div class="fixed bottom-6 right-6 z-10">
+    <button 
+      class="btn btn-primary btn-lg btn-circle shadow-lg"
+      (click)="goToBag()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6" />
+      </svg>
+      <div class="badge badge-secondary badge-sm absolute -top-2 -right-2">
+        {{bagService.getBag()().length}}
+      </div>
+    </button>
+  </div>
+}
