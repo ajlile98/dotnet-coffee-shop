@@ -1,11 +1,108 @@
-<ul>
-    @if(this.bagService.getBag()().length > 0){
-        @for(item of this.bagService.getBag()(); track item.id) {
-        <li>
-            {{item.name}} - ${{item.price}}
-        </li>
+<div class="container mx-auto p-6 pb-48">
+  <h1 class="text-3xl font-bold text-center mb-8">Your Orders</h1>
+  
+  @if (orders().length > 0) {
+    <div class="space-y-6">
+      @for (order of orders(); track order.id) {
+        <div class="card bg-base-100 shadow-lg">
+          <div class="card-body">
+            <!-- Order Header -->
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h2 class="card-title text-xl">Order #{{order.id}}</h2>
+                <div class="text-sm text-base-content/70">
+                  <p>Placed: {{order.created | date:'short'}}</p>
+                  <p>Customer: {{order.user.displayName}}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="badge badge-{{getStatusColor(order.status)}} badge-lg">
+                  {{order.status}}
+                </div>
+                <div class="text-xl font-bold mt-2">${{order.totalAmount}}</div>
+              </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="divider">Order Items</div>
+            <div class="space-y-2">
+              @for (groupedItem of getGroupedOrderItems(order.orderItems); track groupedItem.item.id) {
+                <div class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
+                  <div class="flex items-center gap-3">
+                    <div class="avatar placeholder">
+                      <div class="bg-neutral text-neutral-content rounded-full w-12">
+                        <span class="text-xs">{{groupedItem.item.menuItem.name.charAt(0)}}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold">{{groupedItem.item.menuItem.name}}</h3>
+                      <p class="text-sm text-base-content/70">
+                        Price at time: ${{groupedItem.item.priceAtTime}}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="badge badge-outline">Qty: {{groupedItem.totalQuantity}}</div>
+                    <div class="font-bold">${{groupedItem.totalPrice.toFixed(2)}}</div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Order Actions -->
+            @if (order.status === 'Pending') {
+              <div class="card-actions justify-end mt-4">
+                <button class="btn btn-outline btn-sm" (click)="cancelOrder(order.id)">
+                  Cancel Order
+                </button>
+                <button class="btn btn-primary btn-sm" (click)="viewOrderDetails(order.id)">
+                  View Details
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">☕</div>
+      <h2 class="text-2xl font-bold mb-2">No Orders Yet</h2>
+      <p class="text-base-content/70 mb-6">Start by browsing our menu and placing your first order!</p>
+      <button class="btn btn-primary" (click)="goToMenu()">
+        Browse Menu
+      </button>
+    </div>
+  }
+</div>
+
+<!-- Current Bag Section -->
+<div class="fixed bottom-0 left-0 right-0 bg-base-100 border-t shadow-lg p-4">
+  <div class="container mx-auto">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold">Current Bag</h3>
+      <span class="badge badge-primary">{{this.bagService.getBag()().length}} items</span>
+    </div>
+    
+    @if(this.bagService.getBag()().length > 0) {
+      <div class="flex flex-wrap gap-2 mb-3">
+        @for(bagItem of getBagItemsWithQuantities(); track bagItem.item.id) {
+          <div class="badge badge-outline">
+            {{bagItem.item.name}} ({{bagItem.quantity}}) - ${{(bagItem.item.price * bagItem.quantity).toFixed(2)}}
+          </div>
         }
+      </div>
+      <div class="flex justify-end mb-3">
+        <span class="font-bold">Total: ${{getBagTotal().toFixed(2)}}</span>
+      </div>
+      <button class="btn btn-primary btn-block" (click)="submitOrder()">
+        Submit Your Order!
+      </button>
     } @else {
-        No Items in Bag yet! Please go to Menu and start adding items.
+      <p class="text-sm text-base-content/70 mb-2">No items in bag yet!</p>
+      <button class="btn btn-outline btn-block" (click)="goToMenu()">
+        Add Items to Bag
+      </button>
     }
-</ul>
+  </div>
+</div>

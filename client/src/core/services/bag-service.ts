@@ -33,4 +33,9 @@ export class BagService {
   getBag(){
     return this.bag;
   }
+  
+  clearBag(){
+    this.bag.set([]);
+    localStorage.removeItem('bag');
+  }
 }
