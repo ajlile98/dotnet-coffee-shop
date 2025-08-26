@@ -40,9 +40,15 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
 
-# Expose port 8080 to allow HTTP traffic
-# Note: The default NGINX container now listens on port 8080 instead of 80 
-EXPOSE 8080
+# Create directory for SSL certificates
+USER root
+RUN mkdir -p /etc/nginx/ssl && chown nginx:nginx /etc/nginx/ssl
+USER nginx
+
+# Expose ports for HTTP and HTTPS traffic
+# Port 8080 for HTTP (redirects to HTTPS)
+# Port 8443 for HTTPS
+EXPOSE 8080 8443
 
 # Start Nginx directly with custom config
 ENTRYPOINT ["nginx", "-c", "/etc/nginx/nginx.conf"]

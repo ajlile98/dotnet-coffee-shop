@@ -14,7 +14,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
-      - CORS_ORIGINS=http://localhost,http://localhost:80,http://localhost:4200
+      - CORS_ORIGINS=http://localhost,http://localhost:80,http://localhost:4200,https://localhost,https://localhost:443,https://coffee.andylile.com
     networks:
       - coffee-shop-network
     restart: unless-stopped
@@ -28,7 +28,12 @@ services:
       dockerfile: Dockerfile
     container_name: coffee-shop-client
     ports:
-      - "80:8080"   # Map host port 80 to container port 8080
+      - "80:8080"   # HTTP port (redirects to HTTPS)
+      - "443:8443"  # HTTPS port
+    volumes:
+      # Mount SSL certificates directory
+      # You'll need to place your SSL certificates in ./ssl/ directory
+      - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - api
     networks:
