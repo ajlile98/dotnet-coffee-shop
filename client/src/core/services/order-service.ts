@@ -22,7 +22,7 @@ export class OrderService {
     }
     const options = {
       headers: {
-        Authorization: `Bearer ${this.accountService.currentUser()?.token}`;
+        Authorization: `Bearer ${this.accountService.currentUser()?.token}`,
       }
     }
     return this.http.post(this.baseUrl + 'Order', {
@@ -49,7 +49,7 @@ export class OrderService {
     }
     const options = {
       headers: {
-        Authorization: `Bearer ${this.accountService.currentUser()?.token}`;
+        Authorization: `Bearer ${this.accountService.currentUser()?.token}`
       }
     }
     return this.http.get<any>(this.baseUrl + 'Order', options).pipe(
