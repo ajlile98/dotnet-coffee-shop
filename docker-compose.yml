@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # =========================================
+  # ASP.NET Core API Service
+  # =========================================
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: coffee-shop-api
+    ports:
+      - "5001:5001"  # Map host port 5001 to container port 5001
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - CORS_ORIGINS=http://localhost,http://localhost:80,http://localhost:4200
+    networks:
+      - coffee-shop-network
+    restart: unless-stopped
+
+  # =========================================
+  # Angular Client Service (Nginx)
+  # =========================================
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: coffee-shop-client
+    ports:
+      - "80:8080"   # Map host port 80 to container port 8080
+    depends_on:
+      - api
+    networks:
+      - coffee-shop-network
+    restart: unless-stopped
+
+# =========================================
+# Networks
+# =========================================
+networks:
+  coffee-shop-network:
+    driver: bridge
+    name: coffee-shop-network
+
+# =========================================
+# Optional: Volumes for Development
+# =========================================
+volumes:
+  api-data:
+    name: coffee-shop-api-data
