@@ -1,21 +1,23 @@
-using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using API.Data;
-using API.Data.Migrations;
 using API.DTOs;
 using API.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class OrderController(AppDbContext context) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Order>>> GetOrders()
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             return await context.Orders
+                .Where(o => o.UserId == userId)
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                     .ThenInclude(o => o.MenuItem)
