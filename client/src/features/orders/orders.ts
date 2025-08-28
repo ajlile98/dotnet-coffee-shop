@@ -6,6 +6,7 @@ import { OrderService } from '../../core/services/order-service';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { tap } from 'rxjs';
+import { AccountService } from '../../core/services/account-service';
 
 @Component({
   selector: 'app-orders',
@@ -19,6 +20,7 @@ export class Orders implements OnInit {
   private toastService = inject(ToastService);
   private router = inject(Router);
   protected orders = signal<any[]>([]);
+  private accountService = inject(AccountService)
 
   ngOnInit(){
     this.loadOrders();
@@ -40,6 +42,11 @@ export class Orders implements OnInit {
   }
 
   submitOrder(){
+    const user = this.accountService.currentUser();
+    if (!user){
+      this.toastService.warning("Please Register or Login before submitting an order.")
+      return;
+    }
     const bag = this.bagService.getBag()();
     const orderObservable = this.orderService.createOrder(bag);
 
