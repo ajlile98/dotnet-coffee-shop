@@ -4,6 +4,6 @@ namespace API.DTOs;
 
 public class MenuItemCreationDto
 {
-    public string Name { get; set; }
-    public decimal Price { get; set; }
+    public required string Name { get; set; }
+    public required decimal Price { get; set; }
 }
