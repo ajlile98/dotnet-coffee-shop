@@ -4,15 +4,16 @@ using System.Text;
 using System.Text.Json;
 using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
 public class Seed
 {
-    public static async Task SeedUsers(AppDbContext context)
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        if (await context.Users.AnyAsync()) return;
+        if (await userManager.Users.AnyAsync()) return;
 
         var customerData = await File.ReadAllTextAsync("Data/UserSeedData.json");
         var customers = JsonSerializer.Deserialize<List<SeedUserDto>>(customerData);
@@ -26,16 +27,13 @@ public class Seed
 
         foreach (var customer in customers)
         {
-            using var hmac = new HMACSHA512();
-            
             var user = new AppUser
             {
                 Id = customer.Id,
                 Email = customer.Email,
+                UserName = customer.Email,
                 DisplayName = customer.DisplayName,
                 ImageUrl = customer.ImageUrl,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd")),
-                PasswordSalt = hmac.Key,
                 // Customer = new Customer
                 // {
                 //     Id = customer.Id,
@@ -56,10 +54,24 @@ public class Seed
             //     CustomerId = customer.Id,
             // });
 
-            context.Users.Add(user);
+            var result = await userManager.CreateAsync(user, "Pa$$w0rd");
+            if (!result.Succeeded)
+            {
+                Console.WriteLine(result.Errors.First().Description);
+            }
+            await userManager.AddToRoleAsync(user, "Customer");
         }
 
-        await context.SaveChangesAsync();
+        var admin = new AppUser
+        {
+            UserName = "admin@test.com",
+            Email = "admin@test.com",
+            DisplayName = "admin"
+        };
+
+        await userManager.CreateAsync(admin, "Pa$$w0rd");
+        await userManager.AddToRolesAsync(admin, ["Admin", "Employee"]);
+
     }
 
     public static async Task SeedMenuItems(AppDbContext context)

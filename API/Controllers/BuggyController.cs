@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,12 @@ namespace API.Controllers
         public IActionResult GetBadRequet()
         {
             return BadRequest("This was not a good request");
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin-secret")]
+        public ActionResult<string> GetSecretAdmin()
+        {
+            return Ok("Only Admins should see this");
         }
     }
 }
