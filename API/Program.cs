@@ -102,7 +102,15 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost","http://localhost:4200", "https://localhost:4200", "https://localhost:5001"));
+app.UseCors(x => x
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    .WithOrigins(
+        "http://localhost",
+        "http://localhost:4200", 
+        "https://localhost:4200", 
+        "https://localhost:5001"));
 
 app.UseMiddleware<ExceptionMiddleware>();
 
