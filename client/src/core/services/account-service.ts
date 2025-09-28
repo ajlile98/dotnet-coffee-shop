@@ -5,44 +5,82 @@ import { tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
-  private http = inject(HttpClient)
+  private http = inject(HttpClient);
   currentUser = signal<User | null>(null);
 
   private baseUrl = environment.apiUrl;
-  
-  register(creds: RegisterCreds){
-    return this.http.post<User>(this.baseUrl + 'account/register', creds).pipe(
-      tap(user => {
-        if (user){
-          this.setCurrentUser(user)
-        }
+
+  register(creds: RegisterCreds) {
+    return this.http
+      .post<User>(this.baseUrl + 'account/register', creds, {
+        withCredentials: true,
       })
-    );
-; 
+      .pipe(
+        tap((user) => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.startTokenRefreshInterval();
+          }
+        })
+      );
   }
 
-  login(creds: LoginCreds){
-    return this.http.post<User>(this.baseUrl + 'account/login', creds).pipe(
-      tap(user => {
-        if (user){
-          this.setCurrentUser(user)
-        }
+  login(creds: LoginCreds) {
+    return this.http
+      .post<User>(this.baseUrl + 'account/login', creds, {
+        withCredentials: true,
       })
+      .pipe(
+        tap((user) => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.startTokenRefreshInterval();
+          }
+        })
+      );
+  }
+
+  refreshToken() {
+    return this.http.post<User>(
+      this.baseUrl + 'account/refresh-token',
+      {},
+      { withCredentials: true }
     );
   }
 
-  setCurrentUser(user: User){
-    localStorage.setItem('user', JSON.stringify(user));
+  startTokenRefreshInterval() {
+    setInterval(() => {
+      this.http
+        .post<User>(
+          this.baseUrl + 'account/refresh-token',
+          {},
+          { withCredentials: true }
+        )
+        .subscribe({
+          next: (user) => {
+            this.setCurrentUser(user);
+          },
+          error: () => {
+            this.logout();
+          }
+        });
+    }, 5 * 60 * 1000); // 5 minutes
+  }
+
+  setCurrentUser(user: User) {
     this.currentUser.set(user);
   }
 
-  logout(){
-    localStorage.removeItem('user');
-    this.currentUser.set(null);
-    localStorage.removeItem('bag');
+  logout() {
+    this.http.post(this.baseUrl + 'account/logout', {}, {withCredentials: true}).subscribe({
+      next: () => {
+        localStorage.removeItem('user');
+        this.currentUser.set(null);
+        localStorage.removeItem('bag');
+      }
+    });
   }
-
 }
