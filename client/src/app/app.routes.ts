@@ -12,6 +12,8 @@ import { ServerError } from '../shared/errors/server-error/server-error';
 import { MenuDetailed } from '../features/menu/menu-detailed/menu-detailed';
 import { Orders } from '../features/orders/orders';
 import { About } from '../features/about/about';
+import { Admin } from '../features/admin/admin';
+import { adminGuard } from '../core/guards/admin-guard';
 
 export const routes: Routes = [
     {path: '', component: Home},
@@ -24,6 +26,7 @@ export const routes: Routes = [
             {path: 'customers/:id', component: CustomerDetailed},
             {path: 'lists', component: Lists},
             {path: 'messages', component: Messages},
+            {path: 'admin', component: Admin, canActivate: [adminGuard]},
         ]
     },
     {path: 'menu', component: Menu},

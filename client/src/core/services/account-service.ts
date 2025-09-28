@@ -71,7 +71,9 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = this.getRolesFromToken(user);
     this.currentUser.set(user);
+    console.log(user);
   }
 
   logout() {
@@ -82,5 +84,12 @@ export class AccountService {
         localStorage.removeItem('bag');
       }
     });
+  }
+
+  private getRolesFromToken(user: User): string[]{
+    const payload = user.token.split('.')[1];
+    const decoded = atob(payload);
+    const jsonPayload = JSON.parse(decoded);
+    return Array.isArray(jsonPayload.role) ? jsonPayload.role : [jsonPayload.role]
   }
 }

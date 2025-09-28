@@ -34,4 +34,5 @@ export class Nav {
     this.accountService.logout();
     this.router.navigateByUrl('/');
   }
+
 }
