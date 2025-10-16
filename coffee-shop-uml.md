@@ -183,39 +183,30 @@ classDiagram
         +OnModelCreating(ModelBuilder) void
     }
     
-    class IUserRepository {
-        <<interface>>
-        +GetUserByIdAsync(string) Task~AppUser?~
-        +GetUsersAsync() Task~IReadOnlyList~AppUser~~
-        +SaveAllAsync() Task~bool~
-        +Update(AppUser) void
-    }
-    
-    class UserRepository {
-        -AppDbContext context
-        +GetUserByIdAsync(string) Task~AppUser?~
-        +GetUsersAsync() Task~IReadOnlyList~AppUser~~
-        +SaveAllAsync() Task~bool~
-        +Update(AppUser) void
-    }
-    
     class UserManager {
         <<Identity Framework>>
         +CreateAsync(AppUser, string) Task~IdentityResult~
         +FindByEmailAsync(string) Task~AppUser?~
         +CheckPasswordAsync(AppUser, string) Task~bool~
         +AddToRoleAsync(AppUser, string) Task~IdentityResult~
+        +UpdateAsync(AppUser) Task~IdentityResult~
+    }
+    
+    class SignInManager {
+        <<Identity Framework>>
+        +SignInAsync(AppUser, bool) Task
+        +SignOutAsync() Task
+        +CheckPasswordSignInAsync(AppUser, string, bool) Task~SignInResult~
     }
     
     %% Relationships
-    IUserRepository <|.. UserRepository
-    UserRepository --> AppDbContext
     AppDbContext --> AppUser
     AppDbContext --> MenuItem
     AppDbContext --> Order
     AppDbContext --> OrderItem
     AppDbContext --> Photo
     UserManager --> AppUser
+    SignInManager --> AppUser
 ```
 
 ## Business Logic Layer
@@ -304,7 +295,7 @@ classDiagram
     }
     
     class UsersController {
-        -IUserRepository userRepository
+        -UserManager~AppUser~ userManager
         +GetUsers() Task~ActionResult~IEnumerable~AppUser~~~
         +GetUser(string) Task~ActionResult~AppUser~~
     }
@@ -326,7 +317,7 @@ classDiagram
     AccountController --> ITokenService
     MenuItemsController --> AppDbContext
     OrderController --> AppDbContext
-    UsersController --> IUserRepository
+    UsersController --> UserManager
     AdminController --> UserManager
 ```
 
