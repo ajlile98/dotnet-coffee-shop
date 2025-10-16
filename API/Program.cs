@@ -59,7 +59,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+// builder.Services.AddScoped<IUserRepository, UserRepository>(); // Deprecation
 builder.Services.AddIdentityCore<AppUser>(opt =>
 {
     opt.Password.RequireNonAlphanumeric = false;
