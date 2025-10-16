@@ -149,6 +149,15 @@ The application is containerized and deployed using:
 
 When running locally, visit http://localhost:5001/swagger to explore the API endpoints with interactive documentation.
 
+## 🗂️ System Architecture & UML Diagrams
+
+For detailed system architecture, entity relationships, and class diagrams, see: **[Coffee Shop UML Documentation](coffee-shop-uml.md)**
+
+The documentation includes:
+- **Entity Relationship Diagrams** showing database relationships
+- **Class Diagrams** with detailed entity structures and dependencies  
+- **Architecture Overview** illustrating the full-stack application flow
+- **Design Patterns** and implementation details
 ---
 
 **Note:** This is a demonstration project showcasing modern web development practices and is continuously being enhanced with new features and improvements.
