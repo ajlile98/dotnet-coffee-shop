@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [Entity Relationship Diagram](#entity-relationship-diagram) - Database schema and relationships
 2. [Domain Entities](#domain-entities) - Core business objects and models
-3. [Data Access Layer](#data-access-layer) - Repositories and DbContext
+3. [Data Access Layer](#data-access-layer) - Identity Framework and DbContext
 4. [Business Logic Layer](#business-logic-layer) - Services and interfaces
 5. [Presentation Layer](#presentation-layer) - Controllers and API endpoints
 6. [Data Transfer Objects (DTOs)](#data-transfer-objects-dtos) - API request/response models
@@ -169,7 +169,7 @@ classDiagram
 
 ## Data Access Layer
 
-Repository pattern implementation and Entity Framework DbContext for database operations.
+ASP.NET Core Identity framework services and Entity Framework DbContext for database operations.
 
 ```mermaid
 classDiagram
@@ -226,12 +226,6 @@ classDiagram
         +CreateToken(AppUser) Task~string~
     }
     
-    class Seed {
-        <<static>>
-        +SeedUsers(UserManager~AppUser~) Task
-        +SeedMenuItems(AppDbContext) Task
-    }
-    
     class ExceptionMiddleware {
         -RequestDelegate next
         -ILogger logger
@@ -253,8 +247,6 @@ classDiagram
     %% Relationships
     ITokenService <|.. TokenService
     TokenService --> UserManager
-    Seed --> UserManager
-    Seed --> AppDbContext
     AppUserExtensions --> ITokenService
 ```
 
@@ -422,7 +414,7 @@ graph TB
     subgraph "Business Logic Layer"
         C[Services]
         C1[Token Service]
-        C2[User Repository]
+        C2[Identity Services]
         D[Middleware]
         D1[Exception Middleware]
         D2[JWT Authentication]
@@ -433,6 +425,8 @@ graph TB
         E[Entity Framework Core]
         E1[App DbContext]
         E2[Identity DbContext]
+        E3[UserManager]
+        E4[SignInManager]
         F[(SQLite Database)]
     end
     
@@ -448,15 +442,20 @@ graph TB
     A3 --> A2
     
     B1 --> C1
+    B1 --> E3
     B2 --> E1
     B3 --> E1
     B --> D1
     B --> D2
     
-    C2 --> E1
+    C1 --> E3
     C1 --> G
+    C2 --> E3
+    C2 --> E4
     
     E1 --> E2
+    E3 --> E2
+    E4 --> E2
     E --> F
     
     B --> H
